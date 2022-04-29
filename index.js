@@ -52,3 +52,11 @@ function mainMenu() {
     function viewAllDepartments() {
 
     }
+
+    function viewRoles() {
+
+    }
+
+    function viewEmployees() {
+        
+    }
