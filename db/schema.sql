@@ -3,7 +3,6 @@ DROP DATABASE IF EXISTS employees_db;
 CREATE DATABASE employees_db;
 USE employees_db;
 
---Tables - department, role, employee-- 
 CREATE TABLE department (
     id INT PRIMARY KEY,
     name VARCHAR(30) UNIQUE NOT NULL

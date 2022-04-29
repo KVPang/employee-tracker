@@ -21,8 +21,8 @@ function mainMenu() {
         message: "What would you like to do?",
         name: "tasks",
         choices: [
-            "View All Departments", // display table
-            "View All Roles", 
+            "View All Departments", // display a table
+            "View All Roles", // display a table
             "View All Employees", // display a table
             "Add a Department", // prompt - enter the department name, then department is added to the database
             "Add a Role",  // prompt - enter name, salary, department, then the role is added to the database
@@ -50,24 +50,75 @@ function mainMenu() {
     })}
 
 // connected to tables formatted in seeds
-    function viewAllDepartments() {
+function viewAllDepartments() {
+  const query = "SELECT * FROM department"
+}
+
+function viewRoles() {
+
+}
+
+function viewEmployees() {
+
+}
+
+// prompt functions //
+// adding a department 
+function addDept() {
+    inquirer.prompt([{
+        type: "input",
+        message: "Please enter the name of the department you would like to add",
+        name: "addDepartment"
+        }]).then(response => {
+        mainMenu();
+    })}
+
+
+// add a role
+function addRoles() {
+    inquirer.prompt([{
+        type: "input",
+        message: "",
+        name: "nameOfRole"
+    },
+    {
+        type: "input",
+        message: "",
+        name: "roleSalary"
+    },
+    {
+        type: "input",
+        message: "",
+        name: "roleDepartment"
 
     }
+    ]).then(response => {
+        mainMenu();
+    })}
 
-    function viewRoles() {
 
+// add an employee
+function addRoles() {
+    inquirer.prompt([{
+        type: "input",
+        message: "",
+        name: ""
+    },
+    {
+        type: "input",
+        message: "",
+        name: ""
+    },
+    {
+        type: "input",
+        message: "",
+        name: ""
+    },
+    {
+        type: "input",
+        message: "",
+        name: ""
     }
-
-    function viewEmployees() {
-
-    }
-
-// prompt functions
-    function addDepartment() {
-        inquirer.prompt([{
-            type: "input",
-            message: "Please enter the name of the department you would like to add",
-            name: "addDepartment"
-    }]).then(response => {
+    ]).then(response => {
         mainMenu();
     })}
