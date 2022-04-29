@@ -42,13 +42,14 @@ function mainMenu() {
         } else if (response.tasks ==="Add a Role") {
             addRoles();
         } else if (response.tasks ==="Add an Employee") {
-            viewEmployee();
+            addEmployee();
         } else if (response.tasks ==="Update an Employee Role") {
             updateEmployeeRole();
         } else 
             connection.exit();
     })}
 
+// connected to tables formatted in seeds
     function viewAllDepartments() {
 
     }
@@ -58,5 +59,15 @@ function mainMenu() {
     }
 
     function viewEmployees() {
-        
+
     }
+
+// prompt functions
+    function addDepartment() {
+        inquirer.prompt([{
+            type: "input",
+            message: "Please enter the name of the department you would like to add",
+            name: "addDepartment"
+    }]).then(response => {
+        mainMenu();
+    })}
