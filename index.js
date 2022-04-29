@@ -44,22 +44,22 @@ function mainMenu() {
         } else if (response.tasks ==="Add an Employee") {
             addEmployee();
         } else if (response.tasks ==="Update an Employee Role") {
-            updateEmployeeRole();
+            updateEmployee();
         } else 
             connection.exit();
     })}
 
 // connected to tables formatted in seeds
 function viewAllDepartments() {
-  const query = "SELECT * FROM department"
+    const query = "SELECT * FROM department"
 }
 
 function viewRoles() {
-
+    const query = "SELECT * FROM roles"   
 }
 
 function viewEmployees() {
-
+    const query = "SELECT * FROM employee"
 }
 
 // prompt functions //
@@ -78,47 +78,87 @@ function addDept() {
 function addRoles() {
     inquirer.prompt([{
         type: "input",
-        message: "",
+        message: "What is the name of the role?",
         name: "nameOfRole"
     },
     {
         type: "input",
-        message: "",
+        message: "Please provide the salary amount for this role:",
         name: "roleSalary"
     },
     {
         type: "input",
-        message: "",
-        name: "roleDepartment"
-
-    }
-    ]).then(response => {
+        message: "Which department will this role belong to?",
+        name: "roleDepartment", 
+        choices: ["Sales",
+        "Engineering",
+        "Finance",
+        "Legal"
+        ]
+    }]).then(response => {
         mainMenu();
     })}
 
 
 // add an employee
-function addRoles() {
+function addEmployee() {
     inquirer.prompt([{
         type: "input",
-        message: "",
+        message: "What is the employee's first name?",
+        name: "empFirstName"
+    },
+    {
+        type: "input",
+        message: "What is the employee's last name?",
+        name: "empLastName"
+    },
+    {
+        type: "input",
+        message: "What is the employee's role?",
+        name: "employeeRole",
+        choices: [
+            "Sales Lead",
+            "Salesperson",
+            "Lead Engineer",
+            "Software Engineer",
+            "Account Manager",
+            "Accountant",
+            "Legal Team Lead",
+            "Lawyer"
+        ]
+    },
+    {
+        type: "input",
+        message: "Who is the employee's manager?",
+        name: "employeeMgr",
+        choices: [
+            "None",
+            "John Doe",
+            "Mike Chan",
+            "Ashley Rodriguez",
+            "Kevin Tupik",
+            "Kunal Singh",
+            "Malia Brown",
+            "Sarah Lourd",
+            "Tom Allen",
+        ]
+    }]).then(response => {
+        mainMenu();
+    })}
+
+// update an employee 
+function updateEmployee() {
+    inquirer.prompt([
+    {
+        type: "input",
+        message: "Which employee's role would you like to update?",
         name: ""
     },
     {
         type: "input",
-        message: "",
-        name: ""
-    },
-    {
-        type: "input",
-        message: "",
-        name: ""
-    },
-    {
-        type: "input",
-        message: "",
-        name: ""
-    }
-    ]).then(response => {
+        message: "Which role would you like to assign to the selected employee?",
+        name: // add a new role
+    
+    }]).then(response => {
         mainMenu();
     })}
