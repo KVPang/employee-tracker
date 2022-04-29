@@ -38,13 +38,17 @@ function mainMenu() {
         } else if (response.tasks ==="View All Employees") {
             viewEmployees();
         } else if (response.tasks ==="Add a Department") {
-            add();
+            addDept();
         } else if (response.tasks ==="Add a Role") {
-            viewRoles();
+            addRoles();
         } else if (response.tasks ==="Add an Employee") {
-            viewRoles();
+            viewEmployee();
         } else if (response.tasks ==="Update an Employee Role") {
-            viewRoles();
+            updateEmployeeRole();
         } else 
             connection.exit();
     })}
+
+    function viewAllDepartments() {
+
+    }
