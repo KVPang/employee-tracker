@@ -78,27 +78,26 @@ function addDept() {
 
 
 // add a role
-function addRoles() {
+async function addRoles() {
+    const depts = await connection.promise.query("SELECT department.id AS value, department.name AS name FROM department")
     inquirer.prompt([{
         type: "input",
-        message: "What is the name of the role?",
-        name: "nameOfRole"
+        message: "What is the title of the role?",
+        name: "title"
     },
     {
         type: "input",
         message: "Please provide the salary amount for this role:",
-        name: "roleSalary"
+        name: "salary"
     },
     {
-        type: "input",
+        type: "list",
         message: "Which department will this role belong to?",
-        name: "roleDepartment", 
-        choices: ["Sales",
-        "Engineering",
-        "Finance",
-        "Legal"
-        ]
-    }]).then(response => {
+        name: "department_id", 
+        choices: depts[0]
+    }]).then(async response => {
+        const addEmpRole = await connection.promise.query("INSERT into roles SET ?", response)
+        console.log("Added a role")
         mainMenu();
     })}
 
