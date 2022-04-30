@@ -1,13 +1,12 @@
 // inquirer, mysql, and console.table packages 
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
-const cTable = require('console.table');
+// const cTable = require('console.table');
 
 //  connection to sql
 const connection = mysql.createConnection(
     {
     host: 'localhost',
-    port: 3005,
     user: 'root',
     password: 'password',
     database: 'employees_db'
@@ -46,23 +45,26 @@ function mainMenu() {
         } else if (response.tasks ==="Update an Employee Role") {
             updateEmployee();
         } else 
-            connection.exit();
+            process.exit();
     })}
 
 // connected to tables formatted in seeds
-function viewAllDepartments() {
-    connection.query("SELECT * FROM department",
-    mainMenu())
+async function viewAllDepartments() {
+    const viewAllDept = await connection.promise().query("SELECT * FROM department")
+    console.table(viewAllDept[0])
+    mainMenu()
 }
 
-function viewRoles() {
-    connection.query("SELECT * FROM roles",   
-    mainMenu())
+async function viewRoles() {
+    const viewAllRoles = await connection.promise().query("SELECT title, salary, department.name FROM roles LEFT JOIN department on roles.department_id = department.id")  
+    console.table(viewAllRoles[0])
+    mainMenu()
 }
 
-function viewEmployees() {
-    connection.query("SELECT * FROM employee.first_name, employee.last_name",
-    mainMenu())
+async function viewEmployees() {
+    const viewAllEmployees = await connection.promise().query("SELECT employee.first_name, employee.last_name, roles.title, roles.salary, department.name, manager.last_name AS manager FROM employee LEFT JOIN roles on roles.id = employee.role_id  LEFT JOIN department on department.id = roles.department_id LEFT JOIN employee manager on employee.manager_id = manager.id")
+    console.table(viewAllEmployees[0])
+    mainMenu()
 }
 
 // prompt functions //
@@ -71,15 +73,17 @@ function addDept() {
     inquirer.prompt([{
         type: "input",
         message: "Please enter the name of the department you would like to add",
-        name: "addDepartment"
-        }]).then(response => {
+        name: "name"
+        }]).then(async response => {
+            const addDeptSql = await connection.promise().query("INSERT into department SET ?", response)
+            console.log("Added a department!")
         mainMenu();
     })}
 
 
 // add a role
 async function addRoles() {
-    const depts = await connection.promise.query("SELECT department.id AS value, department.name AS name FROM department")
+    const depts = await connection.promise().query("SELECT department.id AS value, department.name AS name FROM department")
     inquirer.prompt([{
         type: "input",
         message: "What is the title of the role?",
@@ -96,7 +100,7 @@ async function addRoles() {
         name: "department_id", 
         choices: depts[0]
     }]).then(async response => {
-        const addEmpRole = await connection.promise.query("INSERT into roles SET ?", response)
+        const addEmpRole = await connection.promise().query("INSERT into roles SET ?", response)
         console.log("Added a role")
         mainMenu();
     })}
@@ -104,9 +108,8 @@ async function addRoles() {
 
 // add an employee
 async function addEmployee() {
-    const employees = await connection.promise.query("SELECT employee.id AS value, employee.last_name AS name FROM employee")
-    const empRole = await connection.promise.query("SELECT roles.id AS value, employee.title AS name FROM roles")
-    console.log(employee)
+    const employees = await connection.promise().query("SELECT employee.id AS value, employee.last_name AS name FROM employee")
+    const empRole = await connection.promise().query("SELECT roles.id AS value, roles.title AS name FROM roles")
     inquirer.prompt([{
         type: "input",
         message: "What is the employee's first name?",
@@ -129,15 +132,15 @@ async function addEmployee() {
         name: "manager_id",
         choices: employees[0]
     }]).then(async response => {
-        const addEmpSql = await connection.promise.query("INSERT into employee SET ?", response)
+        const addEmpSql = await connection.promise().query("INSERT into employee SET ?", response)
         console.log("Added an employee")
         mainMenu();
     })}
 
 // update an employee 
 async function updateEmployee() {
-    const employees = await connection.promise.query("SELECT employee.id AS value, employee.last_name AS name FROM employee")
-    const empRole = await connection.promise.query("SELECT roles.id AS value, employee.title AS name FROM roles")
+    const employees = await connection.promise().query("SELECT employee.id AS value, employee.last_name AS name FROM employee")
+    const empRole = await connection.promise().query("SELECT roles.id AS value, employee.title AS name FROM roles")
     inquirer.prompt([
     {
         type: "list",
@@ -152,7 +155,9 @@ async function updateEmployee() {
         choices: empRole[0]
     
     }]).then(async response => {
-        const updateEmpSql = await connection.promise.query("UPDATE employee SET role_id = ? WHERE id = ?", [response.role_id, response.id])
+        const updateEmpSql = await connection.promise().query("UPDATE employee SET role_id = ? WHERE id = ?", [response.role_id, response.id])
         console.log("Employee updated!")
         mainMenu();
     })}
+
+    mainMenu()
