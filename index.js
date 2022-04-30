@@ -1,9 +1,8 @@
 // inquirer, mysql, and console.table packages 
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
-// const cTable = require('console.table');
 
-//  connection to sql
+//========== connection to sql ==========//
 const connection = mysql.createConnection(
     {
     host: 'localhost',
@@ -13,7 +12,7 @@ const connection = mysql.createConnection(
     }
 );
 
-//  First prompt asking the user to confirm an action 
+//========== First prompt asking the user to confirm an action ==========//
 function mainMenu() {
     inquirer.prompt([{
         type: "list",
@@ -23,11 +22,11 @@ function mainMenu() {
             "View All Departments", // display a table
             "View All Roles", // display a table
             "View All Employees", // display a table
-            "Add a Department", // prompt - enter the department name, then department is added to the database
-            "Add a Role",  // prompt - enter name, salary, department, then the role is added to the database
-            "Add an Employee", // prompt - enter employee's first name, last name, role & mgr, then employee is added to the database
-            "Update an Employee Role", // prompt - select an employee to update their role, then the information is added to the database 
-            "Exit"] // close/quit the app 
+            "Add a Department", // prompt 
+            "Add a Role",  // prompt 
+            "Add an Employee", // prompt 
+            "Update an Employee Role", // prompt 
+            "Exit"] // close the application
     }]).then(response => {
         console.log(response)
         if (response.tasks ==="View All Departments") {
@@ -45,22 +44,25 @@ function mainMenu() {
         } else if (response.tasks ==="Update an Employee Role") {
             updateEmployee();
         } else 
+        // use process to exit //
             process.exit();
     })}
 
-// connected to tables formatted in seeds
+//========== a view the table containing all departments ==========//
 async function viewAllDepartments() {
     const viewAllDept = await connection.promise().query("SELECT * FROM department")
     console.table(viewAllDept[0])
     mainMenu()
 }
 
+//========== view the table containing all roles ==========//
 async function viewRoles() {
     const viewAllRoles = await connection.promise().query("SELECT title, salary, department.name FROM roles LEFT JOIN department on roles.department_id = department.id")  
     console.table(viewAllRoles[0])
     mainMenu()
 }
 
+//========== view the table containing all employees ==========//
 async function viewEmployees() {
     const viewAllEmployees = await connection.promise().query("SELECT employee.first_name, employee.last_name, roles.title, roles.salary, department.name, manager.last_name AS manager FROM employee LEFT JOIN roles on roles.id = employee.role_id  LEFT JOIN department on department.id = roles.department_id LEFT JOIN employee manager on employee.manager_id = manager.id")
     console.table(viewAllEmployees[0])
@@ -68,7 +70,7 @@ async function viewEmployees() {
 }
 
 // prompt functions //
-// adding a department 
+//========== add a department and save it to the departments table==========//
 function addDept() {
     inquirer.prompt([{
         type: "input",
@@ -81,7 +83,7 @@ function addDept() {
     })}
 
 
-// add a role
+//========== add a new role and save it to the table of roles ==========//
 async function addRoles() {
     const depts = await connection.promise().query("SELECT department.id AS value, department.name AS name FROM department")
     inquirer.prompt([{
@@ -106,7 +108,7 @@ async function addRoles() {
     })}
 
 
-// add an employee
+//========== add an employee and save the new employee to the table of employees ==========//
 async function addEmployee() {
     const employees = await connection.promise().query("SELECT employee.id AS value, employee.last_name AS name FROM employee")
     const empRole = await connection.promise().query("SELECT roles.id AS value, roles.title AS name FROM roles")
@@ -137,7 +139,7 @@ async function addEmployee() {
         mainMenu();
     })}
 
-// update an employee 
+//========== update an employee role ==========//
 async function updateEmployee() {
     const employees = await connection.promise().query("SELECT employee.id AS value, employee.last_name AS name FROM employee")
     const empRole = await connection.promise().query("SELECT roles.id AS value, employee.title AS name FROM roles")
@@ -160,4 +162,5 @@ async function updateEmployee() {
         mainMenu();
     })}
 
+// return to main menu 
     mainMenu()
