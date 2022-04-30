@@ -51,15 +51,18 @@ function mainMenu() {
 
 // connected to tables formatted in seeds
 function viewAllDepartments() {
-    const query = "SELECT * FROM department"
+    connection.query("SELECT * FROM department",
+    mainMenu())
 }
 
 function viewRoles() {
-    const query = "SELECT * FROM roles"   
+    connection.query("SELECT * FROM roles",   
+    mainMenu())
 }
 
 function viewEmployees() {
-    const query = "SELECT * FROM employee"
+    connection.query("SELECT * FROM employee.first_name, employee.last_name",
+    mainMenu())
 }
 
 // prompt functions //
@@ -101,64 +104,56 @@ function addRoles() {
 
 
 // add an employee
-function addEmployee() {
+async function addEmployee() {
+    const employees = await connection.promise.query("SELECT employee.id AS value, employee.last_name AS name FROM employee")
+    const empRole = await connection.promise.query("SELECT roles.id AS value, employee.title AS name FROM roles")
+    console.log(employee)
     inquirer.prompt([{
         type: "input",
         message: "What is the employee's first name?",
-        name: "empFirstName"
+        name: "first_name"
     },
     {
         type: "input",
         message: "What is the employee's last name?",
-        name: "empLastName"
+        name: "last_name"
     },
     {
-        type: "input",
+        type: "list",
         message: "What is the employee's role?",
-        name: "employeeRole",
-        choices: [
-            "Sales Lead",
-            "Salesperson",
-            "Lead Engineer",
-            "Software Engineer",
-            "Account Manager",
-            "Accountant",
-            "Legal Team Lead",
-            "Lawyer"
-        ]
+        name: "role_id",
+        choices: empRole[0]
     },
     {
-        type: "input",
+        type: "list",
         message: "Who is the employee's manager?",
-        name: "employeeMgr",
-        choices: [
-            "None",
-            "John Doe",
-            "Mike Chan",
-            "Ashley Rodriguez",
-            "Kevin Tupik",
-            "Kunal Singh",
-            "Malia Brown",
-            "Sarah Lourd",
-            "Tom Allen",
-        ]
-    }]).then(response => {
+        name: "manager_id",
+        choices: employees[0]
+    }]).then(async response => {
+        const addEmpSql = await connection.promise.query("INSERT into employee SET ?", response)
+        console.log("Added an employee")
         mainMenu();
     })}
 
 // update an employee 
-function updateEmployee() {
+async function updateEmployee() {
+    const employees = await connection.promise.query("SELECT employee.id AS value, employee.last_name AS name FROM employee")
+    const empRole = await connection.promise.query("SELECT roles.id AS value, employee.title AS name FROM roles")
     inquirer.prompt([
     {
-        type: "input",
+        type: "list",
         message: "Which employee's role would you like to update?",
-        name: ""
+        name: "id",
+        choices: employees[0]
     },
     {
-        type: "input",
+        type: "list",
         message: "Which role would you like to assign to the selected employee?",
-        name: // add a new role
+        name: "role_id",
+        choices: empRole[0]
     
-    }]).then(response => {
+    }]).then(async response => {
+        const updateEmpSql = await connection.promise.query("UPDATE employee SET role_id = ? WHERE id = ?", [response.role_id, response.id])
+        console.log("Employee updated!")
         mainMenu();
     })}
