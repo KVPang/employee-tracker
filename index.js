@@ -142,7 +142,7 @@ async function addEmployee() {
 //========== update an employee role ==========//
 async function updateEmployee() {
     const employees = await connection.promise().query("SELECT employee.id AS value, employee.last_name AS name FROM employee")
-    const empRole = await connection.promise().query("SELECT roles.id AS value, employee.title AS name FROM roles")
+    const empRole = await connection.promise().query("SELECT roles.id AS value, roles.title AS name FROM roles")
     inquirer.prompt([
     {
         type: "list",

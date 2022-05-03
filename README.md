@@ -43,14 +43,16 @@ THEN I am prompted to select an employee to update and their new role and this i
 2. Run ``schema.sql`` 
 3. Run ``seeds.sql``
 
-## Installation
+## Usage
 - Run ``node index.js`` in the terminal to start the application
 
 ## Mock-Up
+![terminal](./images/terminal.JPG)
+![terminal2](./images/terminal(2).JPG)
 
 ## Links
 - [GitHub](https://github.com/KVPang/employee-tracker)
-- [Walkthrough Video]()
+- [Walkthrough Video](https://drive.google.com/file/d/1PcgJpEYigvD4xe308Cr7HY2o_MYGQOE7/view)
 
 ## Contact
 - [GitHub](https://github.com/KVPang)
